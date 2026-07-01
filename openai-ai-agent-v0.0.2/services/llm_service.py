@@ -1,4 +1,4 @@
-import os
+import os #for accesing the files in the system
 from dotenv import load_dotenv #For Enviornment Variables
 from langchain_groq import ChatGroq # For Groq API 
 from openai import OpenAI #OpenAI SDK 
