@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
-from models.request_models import QueryRequest, QueryResponse
+from models import QueryRequest, QueryResponse
 from services.llm_service import llm, LLM_PROVIDER
 
 router = APIRouter(
