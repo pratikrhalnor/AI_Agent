@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { 
   LayoutDashboard, 
   MessageSquare, 
@@ -15,37 +15,23 @@ import { useState } from 'react';
 
 const menuItems = [
   { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
-  { name: 'Agent Chat', icon: MessageSquare, path: '/agent' },  // Changed from /dashboard/agent to /agent
+  { name: 'Agent Chat', icon: MessageSquare, path: '/agent' },
   { name: 'Integrations', icon: Puzzle, path: '/integrations' },
   { name: 'Settings', icon: Settings, path: '/setting' },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
-  const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     setIsLoggingOut(true);
-    try {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-      });
-      
-      if (response.ok) {
-        router.push('/login');
-        router.refresh();
-      }
-    } catch (error) {
-      console.error('Logout error:', error);
-    } finally {
-      setIsLoggingOut(false);
-    }
+    // Use replace to prevent going back to dashboard
+    window.location.replace('/sign-out');
   };
 
   return (
     <div className="h-screen w-64 bg-white border-r border-gray-200 flex flex-col fixed left-0 top-0">
-      {/* Logo */}
       <div className="p-6 border-b border-gray-200">
         <Link href="/dashboard" className="flex items-center gap-2">
           <div className="relative">
@@ -58,7 +44,6 @@ export function Sidebar() {
         </Link>
       </div>
       
-      {/* Navigation */}
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
         {menuItems.map((item) => {
           const isActive = pathname === item.path || pathname?.startsWith(item.path + '/');
@@ -82,7 +67,6 @@ export function Sidebar() {
         })}
       </nav>
       
-      {/* Logout */}
       <div className="p-4 border-t border-gray-200">
         <button
           onClick={handleLogout}

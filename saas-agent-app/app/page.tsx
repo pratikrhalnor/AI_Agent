@@ -9,14 +9,30 @@ export default function HomePage() {
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   useEffect(() => {
-    // Check authentication
-    const hasAuthToken = document.cookie.includes('auth-token');
-    
-    if (hasAuthToken) {
-      router.push('/dashboard');
-    } else {
-      setIsCheckingAuth(false);
-    }
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('/api/auth/session');
+        
+        // Check if response is ok
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.authenticated) {
+          router.replace('/dashboard');
+        } else {
+          setIsCheckingAuth(false);
+        }
+      } catch (error) {
+        console.error('Auth check error:', error);
+        // On error, show landing page
+        setIsCheckingAuth(false);
+      }
+    };
+
+    checkAuth();
   }, [router]);
 
   if (isCheckingAuth) {
